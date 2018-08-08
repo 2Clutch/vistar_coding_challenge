@@ -38,7 +38,6 @@ def search(cord):
 
 
 if __name__ == '__main__':
-    server_address = (HOST_NAME, PORT_NUMBER)
     httpd = socketserver.TCPServer((HOST_NAME, PORT_NUMBER), SimpleHTTPRequestHandler)
     try:
         print("Serving at: " + HOST_NAME + ":" + str(PORT_NUMBER))
