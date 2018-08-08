@@ -1,7 +1,8 @@
 import json
+import socketserver
 from urllib.parse import urlparse, parse_qs
 from shapely.geometry import Polygon as pol, Point as p
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler
 
 HOST_NAME = '127.0.0.1'
 PORT_NUMBER = 8080
@@ -9,20 +10,12 @@ PORT_NUMBER = 8080
 LO = 0  # longitude
 LA = 1  # latitude
 
+
 with open("states.json") as f:
     data = json.load(f)
 
 
-def search(cord):
-    if cord:
-        point = p(cord[LO], cord[LA])
-        for state in data:
-            polygon = pol(state['border'])
-            if polygon.contains(point):
-                return state['state']
-
-
-class RequestHandler(BaseHTTPRequestHandler):
+class RequestHandler(SimpleHTTPRequestHandler):
     def do_get(self):
         input_query = urlparse(self.path).query
         if input_query:
@@ -35,9 +28,18 @@ class RequestHandler(BaseHTTPRequestHandler):
                     return state_output['state']
 
 
+def search(cord):
+    if cord:
+        point = p(cord[LO], cord[LA])
+        for state in data:
+            polygon = pol(state['border'])
+            if polygon.contains(point):
+                return state['state']
+
+
 if __name__ == '__main__':
     server_address = (HOST_NAME, PORT_NUMBER)
-    httpd = HTTPServer(server_address, RequestHandler)
+    httpd = socketserver.TCPServer((HOST_NAME, PORT_NUMBER), SimpleHTTPRequestHandler)
     try:
         print("Serving at: " + HOST_NAME + ":" + str(PORT_NUMBER))
         httpd.serve_forever()
