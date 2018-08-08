@@ -9,11 +9,12 @@ with open("states.json") as f:
     data = json.load(f)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def search(cord):
     parser = argparse.ArgumentParser()
-    lon = parser.add_argument("longitude", type=int)
+    lon = parser.add_argument("longitude", type=int)    
     lat = parser.add_argument("latitude", type=int)
+
     args = parser.parse_args()
 
     if cord:
