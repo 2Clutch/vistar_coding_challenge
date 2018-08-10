@@ -18,3 +18,9 @@ correct.
 ```
 
 Project is currently not meeting the expected behavior.
+
+## Installing dependencies
+```commandline
+pip install Flask
+pip install shapely
+```
